@@ -5,7 +5,7 @@ import RecordProcessor from '../lib';
 describe('Record Procesor', function () {
     let rp;
     const shardId = 'my_shard';
-    const records = [{ foo: 'bar' }, { hello: 'world' }];
+    const records = [{ foo: 'bar' }, { hello: 'world', sequenceNumber: '12345' }];
 
     beforeEach(function () {
         rp = new RecordProcessor();
@@ -72,6 +72,7 @@ describe('Record Procesor', function () {
             await rp.doProcessRecords(records, null);
             assert.ok(processRecordStub.calledTwice);
             assert.ok(checkpointStub.called);
+            assert.equal(rp.lastProcessed, '12345');
         });
     });
 

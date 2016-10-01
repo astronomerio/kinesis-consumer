@@ -90,10 +90,11 @@ var RecordProcessor = function () {
                                 }
 
                                 record = _step.value;
-
-                                console.log('calling pr');
-                                _context.next = 11;
+                                _context.next = 10;
                                 return this.processRecord(record);
+
+                            case 10:
+                                this.lastProcessed = record.sequenceNumber;
 
                             case 11:
                                 _iteratorNormalCompletion = true;
