@@ -35,7 +35,6 @@ describe('Record Procesor', function () {
     });
 
     describe('#processRecords', function () {
-
         beforeEach(function () {
             rp.flushBuffer = () => {};
             rp.initialize({ shardId: shardId }, () => {});
@@ -52,37 +51,27 @@ describe('Record Procesor', function () {
             assert.isFalse(doProcessStub.called);
         });
 
-        it('should call checkpoint if doProcessRecords succeeds', function () {
-            rp.doProcessRecords = (records, callback) => {
-                callback();
-            };
+        it('should call doProcessRecords', function () {
+            const doProcessStub = stub(rp, 'doProcessRecords').returns(Promise.resolve());
+            const input = { records: records };
 
-            const checkpointStub = stub(rp, 'checkpoint');
+            rp.processRecords(input);
+            assert.ok(doProcessStub.called);
+        });
+    });
 
-            const checkpointer = { };
-            const input = { records: records, checkpointer: checkpointer };
-            const cbSpy = spy();
-
-            rp.processRecords(input, cbSpy);
-
-            assert.ok(checkpointStub.calledWith(checkpointer, cbSpy));
+    describe('#doProcessRecords', function () {
+        beforeEach(function () {
+            rp.flushBuffer = () => {};
+            rp.initialize({ shardId: shardId }, () => {});
         });
 
-        it('should call not checkpoint if doProcessRecords fails', function () {
-            rp.doProcessRecords = (records, callback) => {
-                callback(new Error('failed'));
-            };
-
+        it('should call processRecord and checkpoint', async function () {
+            const processRecordStub = stub(rp, 'processRecord');
             const checkpointStub = stub(rp, 'checkpoint');
-
-            const checkpointer = { };
-            const input = { records: records, checkpointer: checkpointer };
-            const cbSpy = spy();
-
-            rp.processRecords(input, cbSpy);
-
-            assert.isFalse(checkpointStub.called);
-            assert.ok(cbSpy.called);
+            await rp.doProcessRecords(records, null);
+            assert.ok(processRecordStub.calledTwice);
+            assert.ok(checkpointStub.called);
         });
     });
 
