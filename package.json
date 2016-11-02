@@ -10,7 +10,6 @@
     "test": "mocha --harmony -w r dotenv/config test/index.test.js"
   },
   "dependencies": {
-    "@astronomerio/emitter-s3": "github:astronomerio/emitter-s3#no-babel",
     "@astronomerio/partitioned-buffer": "github:astronomerio/partitioned-buffer#no-babel",
     "bunyan": "1.8.1"
   },
