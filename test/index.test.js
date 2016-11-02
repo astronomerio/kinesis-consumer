@@ -1,6 +1,7 @@
-import { assert } from 'chai';
-import { spy, stub } from 'sinon';
-import RecordProcessor from '../lib';
+const assert = require('chai').assert;
+const spy = require('sinon').spy;
+const stub = require('sinon').stub;
+const RecordProcessor = require('../lib');
 
 describe('Record Procesor', function () {
     let rp;
@@ -13,7 +14,7 @@ describe('Record Procesor', function () {
 
     describe('constructor', function () {
         it('should have the correct settings', function () {
-            const expectedRp = { logger: null, shardId: null, buffer: null, lastProcessed: null };
+            const expectedRp = { logger: null, shardId: null, buffer: null, lastProcessed: null, options: {} };
             assert.deepEqual(rp, expectedRp);
         });
     });
@@ -24,13 +25,14 @@ describe('Record Procesor', function () {
             const flushBufferSpy = spy();
             rp.flushBuffer = flushBufferSpy;
             const createPartitionedBufferSpy = spy(rp, 'createPartitionedBuffer');
+            const options = rp.options;
 
             rp.initialize({ shardId: shardId }, cbSpy);
 
             assert.equal(rp.shardId, shardId);
             assert.ok(rp.logger);
             assert.ok(cbSpy.called);
-            assert.ok(createPartitionedBufferSpy.calledWith(flushBufferSpy));
+            assert.ok(createPartitionedBufferSpy.calledWith(flushBufferSpy, options));
         });
     });
 

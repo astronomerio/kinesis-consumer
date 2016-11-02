@@ -7,7 +7,7 @@
     "dev": "kcl-bootstrap -e -p properties/dev.properties -j /usr/bin/java",
     "start": "kcl-bootstrap -e -p properties/prod.properties -j /usr/bin/java",
     "tail": "tail -f app.log | bunyan -o short",
-    "test": "mocha --harmony -w -r babel-register -r babel-polyfill -r dotenv/config test/index.test.js"
+    "test": "mocha --harmony -w r dotenv/config test/index.test.js"
   },
   "dependencies": {
     "@astronomerio/emitter-s3": "github:astronomerio/emitter-s3#no-babel",
