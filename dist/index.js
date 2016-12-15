@@ -27,12 +27,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var RecordProcessor = function () {
     function RecordProcessor() {
+        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
         _classCallCheck(this, RecordProcessor);
 
         this.shardId = null;
         this.buffer = null;
         this.lastProcessed = null;
         this.logger = null;
+        this.options = options;
     }
 
     _createClass(RecordProcessor, [{
@@ -41,15 +44,15 @@ var RecordProcessor = function () {
             var shardId = _ref.shardId;
 
             this.logger = _logger2.default;
-            this.buffer = this.createPartitionedBuffer(this.flushBuffer);
+            this.buffer = this.createPartitionedBuffer(this.flushBuffer, this.options);
             this.shardId = shardId;
             this.logger.info('initialized record processor');
             cb();
         }
     }, {
         key: 'createPartitionedBuffer',
-        value: function createPartitionedBuffer(flushBuffer) {
-            var pb = new _partitionedBuffer2.default(flushBuffer.bind(this));
+        value: function createPartitionedBuffer(flushBuffer, options) {
+            var pb = new _partitionedBuffer2.default(flushBuffer.bind(this), options);
             return pb;
         }
     }, {
@@ -157,7 +160,7 @@ var RecordProcessor = function () {
                 }, _callee, this, [[0, 30], [4, 16, 20, 28], [21,, 23, 27]]);
             }));
 
-            function doProcessRecords(_x, _x2, _x3) {
+            function doProcessRecords(_x2, _x3, _x4) {
                 return _ref3.apply(this, arguments);
             }
 
@@ -181,7 +184,7 @@ var RecordProcessor = function () {
                 }, _callee2, this);
             }));
 
-            function processRecord(_x4) {
+            function processRecord(_x5) {
                 return _ref4.apply(this, arguments);
             }
 
