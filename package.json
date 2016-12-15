@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@astronomerio/emitter-s3": "github:astronomerio/emitter-s3#1.0.0",
-    "@astronomerio/partitioned-buffer": "github:astronomerio/partitioned-buffer#1.0.0",
+    "@astronomerio/partitioned-buffer": "github:astronomerio/partitioned-buffer#1.0.1",
     "bunyan": "1.8.1"
   },
   "devDependencies": {
