@@ -55,8 +55,8 @@ var RecordProcessor = function () {
     }, {
         key: 'processRecords',
         value: function processRecords(_ref2, cb) {
-            var checkpointer = _ref2.checkpointer;
-            var records = _ref2.records;
+            var checkpointer = _ref2.checkpointer,
+                records = _ref2.records;
 
             if (!records) {
                 return cb();
@@ -201,7 +201,8 @@ var RecordProcessor = function () {
             // If checkpointing, cb should only be called once checkpoint is complete.
             checkpointer.checkpoint(this.lastProcessed, function (err, sequenceNumber) {
                 if (err) {
-                    return _logger2.default.info(err);
+                    _this.logger.info(err);
+                    return cb();
                 }
 
                 _this.logger.info('checkpointed sequenceNumber ' + sequenceNumber + ' with last record processed ' + _this.lastProcessed);
@@ -211,8 +212,8 @@ var RecordProcessor = function () {
     }, {
         key: 'shutdown',
         value: function shutdown(_ref5, cb) {
-            var reason = _ref5.reason;
-            var checkpointer = _ref5.checkpointer;
+            var reason = _ref5.reason,
+                checkpointer = _ref5.checkpointer;
 
             // Checkpoint should only be performed when shutdown reason is TERMINATE.
             if (reason !== 'TERMINATE') {
@@ -224,6 +225,8 @@ var RecordProcessor = function () {
                 checkpointer.checkpoint(function (err) {
                     cb();
                 });
+            }).catch(function (e) {
+                cb();
             });
         }
     }]);
@@ -232,4 +235,3 @@ var RecordProcessor = function () {
 }();
 
 exports.default = RecordProcessor;
-;
