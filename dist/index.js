@@ -67,7 +67,12 @@ var RecordProcessor = function () {
 
             this.logger.info('processing ' + records.length + ' records');
 
-            this.doProcessRecords(records, checkpointer, cb);
+            try {
+                this.doProcessRecords(records, checkpointer, cb);
+            } catch (e) {
+                this.logger.info(e);
+                cb();
+            }
         }
     }, {
         key: 'doProcessRecords',
@@ -79,85 +84,74 @@ var RecordProcessor = function () {
                     while (1) {
                         switch (_context.prev = _context.next) {
                             case 0:
-                                _context.prev = 0;
                                 _iteratorNormalCompletion = true;
                                 _didIteratorError = false;
                                 _iteratorError = undefined;
-                                _context.prev = 4;
+                                _context.prev = 3;
                                 _iterator = records[Symbol.iterator]();
 
-                            case 6:
+                            case 5:
                                 if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                                    _context.next = 14;
+                                    _context.next = 13;
                                     break;
                                 }
 
                                 record = _step.value;
-                                _context.next = 10;
+                                _context.next = 9;
                                 return this.processRecord(record);
 
-                            case 10:
+                            case 9:
                                 this.lastProcessed = record.sequenceNumber;
 
-                            case 11:
+                            case 10:
                                 _iteratorNormalCompletion = true;
-                                _context.next = 6;
+                                _context.next = 5;
                                 break;
 
-                            case 14:
-                                _context.next = 20;
+                            case 13:
+                                _context.next = 19;
                                 break;
 
-                            case 16:
-                                _context.prev = 16;
-                                _context.t0 = _context['catch'](4);
+                            case 15:
+                                _context.prev = 15;
+                                _context.t0 = _context['catch'](3);
                                 _didIteratorError = true;
                                 _iteratorError = _context.t0;
 
-                            case 20:
+                            case 19:
+                                _context.prev = 19;
                                 _context.prev = 20;
-                                _context.prev = 21;
 
                                 if (!_iteratorNormalCompletion && _iterator.return) {
                                     _iterator.return();
                                 }
 
-                            case 23:
-                                _context.prev = 23;
+                            case 22:
+                                _context.prev = 22;
 
                                 if (!_didIteratorError) {
-                                    _context.next = 26;
+                                    _context.next = 25;
                                     break;
                                 }
 
                                 throw _iteratorError;
 
+                            case 25:
+                                return _context.finish(22);
+
                             case 26:
-                                return _context.finish(23);
+                                return _context.finish(19);
 
                             case 27:
-                                return _context.finish(20);
-
-                            case 28:
-                                _context.next = 33;
-                                break;
-
-                            case 30:
-                                _context.prev = 30;
-                                _context.t1 = _context['catch'](0);
-
-                                this.logger.info(_context.t1);
-
-                            case 33:
 
                                 this.checkpoint(checkpointer, cb);
 
-                            case 34:
+                            case 28:
                             case 'end':
                                 return _context.stop();
                         }
                     }
-                }, _callee, this, [[0, 30], [4, 16, 20, 28], [21,, 23, 27]]);
+                }, _callee, this, [[3, 15, 19, 27], [20,, 22, 26]]);
             }));
 
             function doProcessRecords(_x2, _x3, _x4) {
