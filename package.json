@@ -1,7 +1,7 @@
 {
   "name": "@astronomerio/astronomer-kinesis-record-processor",
-  "version": "1.1.0",
-  "main": "lib/index.js",
+  "version": "1.2.0",
+  "main": "dist/index.js",
   "scripts": {
     "build": "babel lib -d dist",
     "dev": "kcl-bootstrap -e -p properties/dev.properties -j /usr/bin/java",
