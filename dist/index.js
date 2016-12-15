@@ -58,6 +58,8 @@ var RecordProcessor = function () {
     }, {
         key: 'processRecords',
         value: function processRecords(_ref2, cb) {
+            var _this = this;
+
             var checkpointer = _ref2.checkpointer,
                 records = _ref2.records;
 
@@ -67,12 +69,10 @@ var RecordProcessor = function () {
 
             this.logger.info('processing ' + records.length + ' records');
 
-            try {
-                this.doProcessRecords(records, checkpointer, cb);
-            } catch (e) {
-                this.logger.info(e);
+            this.doProcessRecords(records, checkpointer, cb).catch(function (e) {
+                _this.logger.info('Error durin doProcessRecords: ' + e);
                 cb();
-            }
+            });
         }
     }, {
         key: 'doProcessRecords',
@@ -187,7 +187,7 @@ var RecordProcessor = function () {
     }, {
         key: 'checkpoint',
         value: function checkpoint(checkpointer, cb) {
-            var _this = this;
+            var _this2 = this;
 
             // can't checkpoint without a lastProcessed id
             if (!this.lastProcessed) {
@@ -198,11 +198,11 @@ var RecordProcessor = function () {
             // If checkpointing, cb should only be called once checkpoint is complete.
             checkpointer.checkpoint(this.lastProcessed, function (err, sequenceNumber) {
                 if (err) {
-                    _this.logger.info(err);
+                    _this2.logger.info(err);
                     return cb();
                 }
 
-                _this.logger.info('checkpointed sequenceNumber ' + sequenceNumber + ' with last record processed ' + _this.lastProcessed);
+                _this2.logger.info('checkpointed sequenceNumber ' + sequenceNumber + ' with last record processed ' + _this2.lastProcessed);
                 cb();
             });
         }
