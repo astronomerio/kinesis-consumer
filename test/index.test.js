@@ -13,7 +13,7 @@ describe('Record Procesor', function () {
 
     describe('constructor', function () {
         it('should have the correct settings', function () {
-            const expectedRp = { logger: null, shardId: null, buffer: null, lastProcessed: null };
+            const expectedRp = { logger: null, shardId: null, buffer: null, lastProcessed: null, options: {} };
             assert.deepEqual(rp, expectedRp);
         });
     });
