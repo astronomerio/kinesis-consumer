@@ -16,8 +16,8 @@ var options = {
     name: 'astronomer-kinesis-record-processor',
     streams: [{
         type: 'rotating-file',
-        period: '12h',
-        count: 3,
+        period: '6h',
+        count: 2,
         level: 'trace',
         path: logDir + '/app.log'
     }]
