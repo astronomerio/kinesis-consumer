@@ -12,6 +12,7 @@ ENV LOG_PATH /usr/src/app/log
 # Bundle app source
 ONBUILD COPY dist /usr/src/app
 ONBUILD COPY properties /usr/src/app/properties
+ONBUILD COPY bin /usr/src/app/bin
 ONBUILD COPY package.json /usr/src/app
 ONBUILD WORKDIR /usr/src/app
 ONBUILD RUN npm install --production
