@@ -44,7 +44,13 @@ var RecordProcessor = function () {
       var shardId = _ref.shardId;
 
       this.logger = _logger2.default;
-      this.buffer = this.createPartitionedBuffer(this.flushBuffer, this.options);
+
+      // we only want to create the partitioned buffer if the subclass has defined flushBuffer.
+      // some subclasses won't use the partitioned buffer
+      if (this.flushBuffer) {
+        this.buffer = this.createPartitionedBuffer(this.flushBuffer, this.options);
+      }
+
       this.shardId = shardId;
       this.logger.debug('initialized record processor');
       cb();
@@ -219,19 +225,13 @@ var RecordProcessor = function () {
         return cb();
       }
 
-      this.buffer.flushAllBuffers().then(function () {
-        // Whenever checkpointing, cb should only be invoked once checkpoint is complete.
-        checkpointer.checkpoint(function (err) {
-          if (err) {
-            _this3.log.error(err);
-          }
-
-          cb();
+      if (this.buffer) {
+        this.buffer.flushAllBuffers().then(function () {
+          _this3.checkpoint(checkpointer, cb);
         });
-      }).catch(function (e) {
-        _this3.logger.error(e);
-        cb();
-      });
+      } else {
+        this.checkpoint(checkpointer, cb);
+      }
     }
   }]);
 
