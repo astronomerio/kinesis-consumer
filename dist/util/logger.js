@@ -1,26 +1,41 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _bunyan = require('bunyan');
 
 var _bunyan2 = _interopRequireDefault(_bunyan);
 
+var _uuid = require('uuid');
+
+var _uuid2 = _interopRequireDefault(_uuid);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var logDir = process.env.NODE_LOG_DIR !== undefined ? process.env.NODE_LOG_DIR : ".";
+var logPath = process.env.LOG_PATH ? path.join(process.env.LOG_PATH, _uuid2.default.v4() + '.log') : './app.log';
+
+function getDefaultStreams() {
+  var streams = [{
+    level: 'info',
+    path: logPath
+  }];
+
+  // development will log to stdout for easy debugging
+  if (process.env.NODE_ENV !== 'production') {
+    streams.push({
+      level: 'trace',
+      stream: process.stdout
+    });
+  }
+
+  return streams;
+}
 
 var options = {
-    name: 'astronomer-kinesis-record-processor',
-    streams: [{
-        type: 'rotating-file',
-        period: '6h',
-        count: 2,
-        level: 'trace',
-        path: logDir + '/app.log'
-    }]
+  name: process.env.BUNYAN_APP_NAME || 'kinesis-record-processor',
+  streams: getDefaultStreams()
 };
 
 exports.default = _bunyan2.default.createLogger(options);

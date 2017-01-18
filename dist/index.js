@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -26,209 +26,216 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  */
 
 var RecordProcessor = function () {
-    function RecordProcessor() {
-        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  function RecordProcessor() {
+    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-        _classCallCheck(this, RecordProcessor);
+    _classCallCheck(this, RecordProcessor);
 
-        this.shardId = null;
-        this.buffer = null;
-        this.lastProcessed = null;
-        this.logger = null;
-        this.options = options;
+    this.shardId = null;
+    this.buffer = null;
+    this.lastProcessed = null;
+    this.logger = null;
+    this.options = options;
+  }
+
+  _createClass(RecordProcessor, [{
+    key: 'initialize',
+    value: function initialize(_ref, cb) {
+      var shardId = _ref.shardId;
+
+      this.logger = _logger2.default;
+      this.buffer = this.createPartitionedBuffer(this.flushBuffer, this.options);
+      this.shardId = shardId;
+      this.logger.debug('initialized record processor');
+      cb();
     }
+  }, {
+    key: 'createPartitionedBuffer',
+    value: function createPartitionedBuffer(flushBuffer, options) {
+      var pb = new _partitionedBuffer2.default(flushBuffer.bind(this), options);
+      return pb;
+    }
+  }, {
+    key: 'processRecords',
+    value: function processRecords(_ref2, cb) {
+      var _this = this;
 
-    _createClass(RecordProcessor, [{
-        key: 'initialize',
-        value: function initialize(_ref, cb) {
-            var shardId = _ref.shardId;
+      var checkpointer = _ref2.checkpointer,
+          records = _ref2.records;
 
-            this.logger = _logger2.default;
-            this.buffer = this.createPartitionedBuffer(this.flushBuffer, this.options);
-            this.shardId = shardId;
-            this.logger.info('initialized record processor');
-            cb();
-        }
-    }, {
-        key: 'createPartitionedBuffer',
-        value: function createPartitionedBuffer(flushBuffer, options) {
-            var pb = new _partitionedBuffer2.default(flushBuffer.bind(this), options);
-            return pb;
-        }
-    }, {
-        key: 'processRecords',
-        value: function processRecords(_ref2, cb) {
-            var _this = this;
+      if (!records) {
+        return cb();
+      }
 
-            var checkpointer = _ref2.checkpointer,
-                records = _ref2.records;
+      this.logger.debug('processing ' + records.length + ' records');
 
-            if (!records) {
-                return cb();
-            }
+      this.doProcessRecords(records, checkpointer, cb).catch(function (e) {
+        _this.logger.error('Error during doProcessrecords.', e);
+        cb();
+      });
+    }
+  }, {
+    key: 'doProcessRecords',
+    value: function () {
+      var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee(records, checkpointer, cb) {
+        var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, record;
 
-            this.logger.info('processing ' + records.length + ' records');
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _iteratorNormalCompletion = true;
+                _didIteratorError = false;
+                _iteratorError = undefined;
+                _context.prev = 3;
+                _iterator = records[Symbol.iterator]();
 
-            this.doProcessRecords(records, checkpointer, cb).catch(function (e) {
-                _this.logger.info('Error durin doProcessRecords: ' + e);
-                cb();
-            });
-        }
-    }, {
-        key: 'doProcessRecords',
-        value: function () {
-            var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee(records, checkpointer, cb) {
-                var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, record;
-
-                return regeneratorRuntime.wrap(function _callee$(_context) {
-                    while (1) {
-                        switch (_context.prev = _context.next) {
-                            case 0:
-                                _iteratorNormalCompletion = true;
-                                _didIteratorError = false;
-                                _iteratorError = undefined;
-                                _context.prev = 3;
-                                _iterator = records[Symbol.iterator]();
-
-                            case 5:
-                                if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                                    _context.next = 13;
-                                    break;
-                                }
-
-                                record = _step.value;
-                                _context.next = 9;
-                                return this.processRecord(record);
-
-                            case 9:
-                                this.lastProcessed = record.sequenceNumber;
-
-                            case 10:
-                                _iteratorNormalCompletion = true;
-                                _context.next = 5;
-                                break;
-
-                            case 13:
-                                _context.next = 19;
-                                break;
-
-                            case 15:
-                                _context.prev = 15;
-                                _context.t0 = _context['catch'](3);
-                                _didIteratorError = true;
-                                _iteratorError = _context.t0;
-
-                            case 19:
-                                _context.prev = 19;
-                                _context.prev = 20;
-
-                                if (!_iteratorNormalCompletion && _iterator.return) {
-                                    _iterator.return();
-                                }
-
-                            case 22:
-                                _context.prev = 22;
-
-                                if (!_didIteratorError) {
-                                    _context.next = 25;
-                                    break;
-                                }
-
-                                throw _iteratorError;
-
-                            case 25:
-                                return _context.finish(22);
-
-                            case 26:
-                                return _context.finish(19);
-
-                            case 27:
-
-                                this.checkpoint(checkpointer, cb);
-
-                            case 28:
-                            case 'end':
-                                return _context.stop();
-                        }
-                    }
-                }, _callee, this, [[3, 15, 19, 27], [20,, 22, 26]]);
-            }));
-
-            function doProcessRecords(_x2, _x3, _x4) {
-                return _ref3.apply(this, arguments);
-            }
-
-            return doProcessRecords;
-        }()
-    }, {
-        key: 'processRecord',
-        value: function () {
-            var _ref4 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(record) {
-                return regeneratorRuntime.wrap(function _callee2$(_context2) {
-                    while (1) {
-                        switch (_context2.prev = _context2.next) {
-                            case 0:
-                                throw new Error('Must implement processRecord');
-
-                            case 1:
-                            case 'end':
-                                return _context2.stop();
-                        }
-                    }
-                }, _callee2, this);
-            }));
-
-            function processRecord(_x5) {
-                return _ref4.apply(this, arguments);
-            }
-
-            return processRecord;
-        }()
-    }, {
-        key: 'checkpoint',
-        value: function checkpoint(checkpointer, cb) {
-            var _this2 = this;
-
-            // can't checkpoint without a lastProcessed id
-            if (!this.lastProcessed) {
-                this.logger.info('no last processed found');
-                return cb();
-            }
-
-            // If checkpointing, cb should only be called once checkpoint is complete.
-            checkpointer.checkpoint(this.lastProcessed, function (err, sequenceNumber) {
-                if (err) {
-                    _this2.logger.info(err);
-                    return cb();
+              case 5:
+                if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+                  _context.next = 13;
+                  break;
                 }
 
-                _this2.logger.info('checkpointed sequenceNumber ' + sequenceNumber + ' with last record processed ' + _this2.lastProcessed);
-                cb();
-            });
-        }
-    }, {
-        key: 'shutdown',
-        value: function shutdown(_ref5, cb) {
-            var reason = _ref5.reason,
-                checkpointer = _ref5.checkpointer;
+                record = _step.value;
+                _context.next = 9;
+                return this.processRecord(record);
 
-            // Checkpoint should only be performed when shutdown reason is TERMINATE.
-            if (reason !== 'TERMINATE') {
-                return cb();
+              case 9:
+                this.lastProcessed = record.sequenceNumber;
+
+              case 10:
+                _iteratorNormalCompletion = true;
+                _context.next = 5;
+                break;
+
+              case 13:
+                _context.next = 19;
+                break;
+
+              case 15:
+                _context.prev = 15;
+                _context.t0 = _context['catch'](3);
+                _didIteratorError = true;
+                _iteratorError = _context.t0;
+
+              case 19:
+                _context.prev = 19;
+                _context.prev = 20;
+
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                  _iterator.return();
+                }
+
+              case 22:
+                _context.prev = 22;
+
+                if (!_didIteratorError) {
+                  _context.next = 25;
+                  break;
+                }
+
+                throw _iteratorError;
+
+              case 25:
+                return _context.finish(22);
+
+              case 26:
+                return _context.finish(19);
+
+              case 27:
+
+                this.checkpoint(checkpointer, cb);
+
+              case 28:
+              case 'end':
+                return _context.stop();
             }
+          }
+        }, _callee, this, [[3, 15, 19, 27], [20,, 22, 26]]);
+      }));
 
-            this.buffer.flushAllBuffers().then(function () {
-                // Whenever checkpointing, cb should only be invoked once checkpoint is complete.
-                checkpointer.checkpoint(function (err) {
-                    cb();
-                });
-            }).catch(function (e) {
-                cb();
-            });
+      function doProcessRecords(_x2, _x3, _x4) {
+        return _ref3.apply(this, arguments);
+      }
+
+      return doProcessRecords;
+    }()
+  }, {
+    key: 'processRecord',
+    value: function () {
+      var _ref4 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(record) {
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                throw new Error('Must implement processRecord');
+
+              case 1:
+              case 'end':
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function processRecord(_x5) {
+        return _ref4.apply(this, arguments);
+      }
+
+      return processRecord;
+    }()
+  }, {
+    key: 'checkpoint',
+    value: function checkpoint(checkpointer, cb) {
+      var _this2 = this;
+
+      // can't checkpoint without a lastProcessed id
+      if (!this.lastProcessed) {
+        this.logger.debug('No last processed found');
+        return cb();
+      }
+
+      // If checkpointing, cb should only be called once checkpoint is complete.
+      checkpointer.checkpoint(this.lastProcessed, function (err, sequenceNumber) {
+        if (err) {
+          _this2.logger.info(err);
+          return cb();
         }
-    }]);
 
-    return RecordProcessor;
+        _this2.logger.info('checkpointed sequenceNumber ' + sequenceNumber + ' with last record processed ' + _this2.lastProcessed);
+        cb();
+      });
+    }
+  }, {
+    key: 'shutdown',
+    value: function shutdown(_ref5, cb) {
+      var _this3 = this;
+
+      var reason = _ref5.reason,
+          checkpointer = _ref5.checkpointer;
+
+      // Checkpoint should only be performed when shutdown reason is not TERMINATE.
+      if (reason !== 'TERMINATE') {
+        return cb();
+      }
+
+      this.buffer.flushAllBuffers().then(function () {
+        // Whenever checkpointing, cb should only be invoked once checkpoint is complete.
+        checkpointer.checkpoint(function (err) {
+          if (err) {
+            _this3.log.error(err);
+          }
+
+          cb();
+        });
+      }).catch(function (e) {
+        _this3.logger.error(e);
+        cb();
+      });
+    }
+  }]);
+
+  return RecordProcessor;
 }();
 
 exports.default = RecordProcessor;
