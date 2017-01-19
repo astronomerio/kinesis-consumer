@@ -17,5 +17,4 @@ ONBUILD COPY dist /usr/src/app/dist
 ONBUILD COPY properties /usr/src/app/properties
 ONBUILD COPY bin /usr/src/app/bin
 
-EXPOSE 8080
-CMD ["npm", "start"]
+CMD ["/usr/src/app/node_modules/.bin/kcl-bootstrap", "-e", "-p", "properties/prod.properties", "-j", "/usr/bin/java"]
