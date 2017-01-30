@@ -16,14 +16,17 @@ var _path = require('path');
 
 var _path2 = _interopRequireDefault(_path);
 
+var _streamroller = require('streamroller');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var logPath = process.env.LOG_PATH ? _path2.default.join(process.env.LOG_PATH, _uuid2.default.v4() + '.log') : './app.log';
+var rollingStream = new _streamroller.RollingFileStream(logPath, 100000000, 3);
 
 function getDefaultStreams() {
   var streams = [{
     level: 'info',
-    path: logPath
+    stream: rollingStream
   }];
 
   return streams;
