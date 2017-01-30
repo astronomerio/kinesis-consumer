@@ -36,8 +36,4 @@ var options = {
 
 var log = _bunyan2.default.createLogger(options);
 
-process.on('SIGUSR2', function () {
-  log.reopenFileStreams();
-});
-
 exports.default = log;
