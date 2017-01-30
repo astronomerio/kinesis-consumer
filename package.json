@@ -13,6 +13,7 @@
     "@astronomerio/emitter-s3": "github:astronomerio/emitter-s3#1.0.0",
     "@astronomerio/partitioned-buffer": "github:astronomerio/partitioned-buffer#1.0.0",
     "bunyan": "1.8.1",
+    "streamroller": "^0.3.0",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
