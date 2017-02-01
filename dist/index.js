@@ -204,11 +204,11 @@ var RecordProcessor = function () {
       // If checkpointing, cb should only be called once checkpoint is complete.
       checkpointer.checkpoint(this.lastProcessed, function (err, sequenceNumber) {
         if (err) {
-          _this2.logger.info(err);
+          _this2.logger.error({ err: err });
           return cb();
         }
 
-        _this2.logger.info('checkpointed sequenceNumber ' + sequenceNumber + ' with last record processed ' + _this2.lastProcessed);
+        _this2.logger.debug('checkpointed sequenceNumber ' + sequenceNumber + ' with last record processed ' + _this2.lastProcessed);
         cb();
       });
     }

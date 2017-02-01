@@ -27,6 +27,9 @@ function getDefaultStreams() {
   var streams = [{
     level: 'info',
     stream: rollingStream
+  }, {
+    level: 'debug',
+    stream: process.stdout
   }];
 
   return streams;
