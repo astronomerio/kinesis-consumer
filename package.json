@@ -1,5 +1,5 @@
 {
-  "name": "@astronomerio/astronomer-kinesis-record-processor",
+  "name": "@astronomerio/kinesis-consumer",
   "version": "3.0.0",
   "main": "dist/index.js",
   "scripts": {
