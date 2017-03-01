@@ -1,0 +1,11 @@
+lib/
+.git/
+.env
+.babelrc
+Dockerfile
+LICENSE
+README.md
+node_modules/
+test/
+*.log
+.dockerignore
