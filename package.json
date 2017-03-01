@@ -1,6 +1,6 @@
 {
   "name": "@astronomerio/astronomer-kinesis-record-processor",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "main": "dist/index.js",
   "scripts": {
     "build": "babel lib -d dist",
@@ -10,11 +10,9 @@
     "test": "mocha -w -r babel-register -r babel-polyfill -r dotenv/config test/index.test.js"
   },
   "dependencies": {
+    "@astronomerio/astronomer-logger": "^1.1.1",
     "@astronomerio/emitter-s3": "github:astronomerio/emitter-s3#1.0.0",
-    "@astronomerio/partitioned-buffer": "github:astronomerio/partitioned-buffer#1.0.0",
-    "bunyan": "1.8.1",
-    "streamroller": "^0.3.0",
-    "uuid": "^3.0.1"
+    "@astronomerio/partitioned-buffer": "github:astronomerio/partitioned-buffer#1.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.16.0",
