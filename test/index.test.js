@@ -55,7 +55,7 @@ describe('Record Procesor', function () {
             const doProcessStub = stub(rp, 'doProcessRecords').returns(Promise.resolve());
             const input = { records: records };
 
-            rp.processRecords(input);
+            rp.processRecords(input, () => {});
             assert.ok(doProcessStub.called);
         });
     });
@@ -68,7 +68,7 @@ describe('Record Procesor', function () {
 
         it('should call processRecord', async function () {
             const processRecordStub = stub(rp, 'processRecord');
-            await rp.doProcessRecords(records, null);
+            await rp.doProcessRecords(records, () => {});
             assert.ok(processRecordStub.calledTwice);
             assert.equal(rp.lastProcessed, '12345');
         });
