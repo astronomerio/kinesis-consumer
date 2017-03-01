@@ -66,12 +66,10 @@ describe('Record Procesor', function () {
             rp.initialize({ shardId: shardId }, () => {});
         });
 
-        it('should call processRecord and checkpoint', async function () {
+        it('should call processRecord', async function () {
             const processRecordStub = stub(rp, 'processRecord');
-            const checkpointStub = stub(rp, 'checkpoint');
             await rp.doProcessRecords(records, null);
             assert.ok(processRecordStub.calledTwice);
-            assert.ok(checkpointStub.called);
             assert.equal(rp.lastProcessed, '12345');
         });
     });
