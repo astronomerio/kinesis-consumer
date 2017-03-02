@@ -20,7 +20,7 @@ RUN curl -sL https://deb.nodesource.com/setup_7.x | bash && apt-get install -y n
 RUN mkdir -p /usr/src/app
 
 RUN mkdir -p /usr/src/app/log
-ENV LOG_PATH /usr/src/app/log
+ENV BUNYAN_LOG_PATH /usr/src/app/log
 
 # Bundle app source
 ONBUILD COPY package.json /usr/src/app
