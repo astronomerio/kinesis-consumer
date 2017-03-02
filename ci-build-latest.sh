@@ -2,8 +2,6 @@
 
 set -e
 
-npm run build
-
 docker build -t astronomerio/kinesis-consumer:latest .
 
 # login to Docker Hub

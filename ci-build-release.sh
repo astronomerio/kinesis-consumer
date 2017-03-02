@@ -2,7 +2,7 @@
 
 set -e
 
-npm run build
+npm publish
 
 docker build -t astronomerio/kinesis-consumer:$CIRCLE_TAG .
 
