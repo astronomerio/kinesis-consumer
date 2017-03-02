@@ -1,6 +1,6 @@
 {
   "name": "@astronomerio/kinesis-consumer",
-  "version": "3.0.4",
+  "version": "3.0.6",
   "main": "dist/index.js",
   "scripts": {
     "build": "babel lib -d dist",
