@@ -1,0 +1,17 @@
+machine:
+  services:
+    - docker
+  node:
+    version: 7.4.0
+
+deployment:
+  release:
+    tag: /v[0-9]+(\.[0-9]+)*/
+    owner: astronomerio
+    commands:
+      - ./ci-build-release.sh
+  latest:
+    branch: master
+    owner: astronomerio
+    commands:
+      - ./ci-build-latest.sh
