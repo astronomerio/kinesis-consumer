@@ -13,11 +13,11 @@
   "dependencies": {
     "@astronomerio/astronomer-logger": "^1.1.1",
     "@astronomerio/emitter-s3": "github:astronomerio/emitter-s3#1.0.0",
-    "@astronomerio/partitioned-buffer": "github:astronomerio/partitioned-buffer#1.0.0",
-    "babel-polyfill": "6.9.1"
+    "@astronomerio/partitioned-buffer": "github:astronomerio/partitioned-buffer#1.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.16.0",
+    "babel-polyfill": "6.9.1",
     "babel-preset-es2015": "6.9.0",
     "babel-preset-stage-3": "6.11.0",
     "babel-register": "6.9.0",
