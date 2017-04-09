@@ -3,8 +3,7 @@
   "version": "3.0.4",
   "main": "lib/index.js",
   "scripts": {
-    "build": "babel lib -d dist",
-    "prepublish": "npm run build && npm run test",
+    "prepublish": "npm run test",
     "test": "mocha test/index.test.js"
   },
   "dependencies": {
