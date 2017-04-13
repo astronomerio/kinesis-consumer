@@ -4,7 +4,7 @@
   "main": "lib/index.js",
   "scripts": {
     "prepublish": "npm run test",
-    "test": "mocha test/index.test.js"
+    "test": "mocha -w test/index.test.js"
   },
   "dependencies": {
     "async": "^2.3.0",
