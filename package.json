@@ -1,5 +1,5 @@
 {
-  "name": "@astronomerio/kinesis-consumer",
+  "name": "@astronomer/kinesis-consumer",
   "version": "4.0.0",
   "main": "lib/index.js",
   "scripts": {
