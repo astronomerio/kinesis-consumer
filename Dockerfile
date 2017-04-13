@@ -26,7 +26,7 @@ ENV BUNYAN_LOG_PATH /usr/src/app/log
 ONBUILD COPY package.json /usr/src/app
 ONBUILD WORKDIR /usr/src/app
 ONBUILD RUN npm install --production
-ONBUILD COPY dist /usr/src/app/dist
+ONBUILD COPY lib /usr/src/app/lib
 ONBUILD COPY properties /usr/src/app/properties
 ONBUILD COPY bin /usr/src/app/bin
 
