@@ -1,6 +1,6 @@
 {
   "name": "@astronomer/kinesis-consumer",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "main": "lib/index.js",
   "scripts": {
     "prepublish": "npm run test",
