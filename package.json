@@ -3,6 +3,7 @@
   "version": "4.1.0",
   "main": "lib/index.js",
   "scripts": {
+    "lint": "eslint lib",
     "prepublish": "npm run test",
     "test": "mocha test/index.test.js"
   },
@@ -13,6 +14,11 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "dotenv": "2.0.0",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.3",
     "mocha": "^3.0.2",
     "sinon": "^1.17.6"
   }
