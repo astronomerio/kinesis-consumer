@@ -5,7 +5,8 @@
   "scripts": {
     "lint": "eslint lib",
     "prepublish": "npm run test",
-    "test": "mocha test/index.test.js"
+    "test": "mocha test/index.test.js",
+    "test-watch": "mocha -w test/index.test.js"
   },
   "dependencies": {
     "async": "^2.3.0",
