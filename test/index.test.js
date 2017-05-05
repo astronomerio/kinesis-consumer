@@ -76,7 +76,7 @@ describe('Record Procesor', function () {
     });
 
     it('should call processRecord once for one record', function (done) {
-      const mySpy = spy(Consumer.prototype, 'processRecord')
+      const mySpy = spy(Consumer.prototype, 'processRecord');
       myConsumer.processRecords({
         records: [{}],
       }, function () {
@@ -86,7 +86,7 @@ describe('Record Procesor', function () {
     });
 
     it('should call processRecord twice for two records', function (done) {
-      const mySpy = spy(Consumer.prototype, 'processRecord')
+      const mySpy = spy(Consumer.prototype, 'processRecord');
       myConsumer.processRecords({
         records: [{}, {}],
       }, function () {
@@ -96,7 +96,34 @@ describe('Record Procesor', function () {
     });
 
     it('should call processRecord thrice for three records', function (done) {
-      const mySpy = spy(Consumer.prototype, 'processRecord')
+      const mySpy = spy(Consumer.prototype, 'processRecord');
+      myConsumer.processRecords({
+        records: [{}, {}, {}],
+      }, function () {
+        assert.ok(mySpy.calledThrice);
+        done();
+      });
+    });
+
+    it('should call processRecord thrice for three records even if they throw errors', function (done) {
+      const myStub = stub(Consumer.prototype, 'processRecord').throws('Uh oh');
+      myConsumer.processRecords({
+        records: [{}, {}, {}],
+      }, function () {
+        assert.ok(myStub.calledThrice);
+        done();
+      });
+    });
+
+    it('should work with async processRecord', (done) => {
+      Consumer.prototype.processRecord = async function (info, cb) {
+        await Promise.resolve();
+        cb();
+      };
+
+      myConsumer = new Consumer();
+
+      const mySpy = spy(Consumer.prototype, 'processRecord');
       myConsumer.processRecords({
         records: [{}, {}, {}],
       }, function () {
