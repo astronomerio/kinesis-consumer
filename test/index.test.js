@@ -1,4 +1,6 @@
-const { assert } = require('chai');
+/* eslint-disable no-unused-expressions */
+const sinon = require('sinon');
+const { assert, expect } = require('chai');
 const { spy, stub } = require('sinon');
 const consumer = require('../lib');
 
@@ -130,6 +132,45 @@ describe('Record Procesor', function () {
         assert.ok(mySpy.calledThrice);
         done();
       });
+    });
+  });
+
+  describe('checkpoint', () => {
+    let Consumer;
+    let myConsumer;
+
+    beforeEach(function () {
+      Consumer = consumer('my-consumer');
+      Consumer.prototype.processRecord = function (info, cb) { cb(); };
+      myConsumer = new Consumer();
+    });
+
+    it('should succeed if checkpoint succeeds', async () => {
+      const checkpointer = {
+        checkpoint: (num, cb) => {
+          cb(null, num);
+        },
+      };
+      await Consumer.checkpoint(checkpointer, 123456);
+    });
+
+    it('should retry if checkpoint fails', async () => {
+      const checkpointer = {
+        checkpoint: (num, cb) => {
+          cb(null, num);
+        },
+      };
+      // first time will error
+      const checkpointStub = sinon.stub(checkpointer, 'checkpoint').onFirstCall().callsFake((num, cb) => {
+        cb(new Error('Uh oh'));
+      });
+      // second time will succeed
+      checkpointStub.onSecondCall().callsFake((num, cb) => {
+        cb(null, num);
+      });
+
+      await Consumer.checkpoint(checkpointer, 123456);
+      expect(checkpointStub.calledTwice).to.be.true;
     });
   });
 });
