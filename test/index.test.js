@@ -133,6 +133,25 @@ describe('Record Procesor', function () {
         done();
       });
     });
+
+    it('should pass the correct value for current record', (done) => {
+      const countStub = sinon.stub();
+      Consumer.prototype.processRecord = function (info, cb) {
+        countStub(info.currentRecord);
+        cb();
+      };
+
+      myConsumer = new Consumer();
+
+      myConsumer.processRecords({
+        records: [{}, {}, {}],
+      }, function () {
+        assert.ok(countStub.firstCall.calledWith(1));
+        assert.ok(countStub.secondCall.calledWith(2));
+        assert.ok(countStub.thirdCall.calledWith(3));
+        done();
+      });
+    });
   });
 
   describe('checkpoint', () => {
