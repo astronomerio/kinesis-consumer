@@ -13,8 +13,3 @@ deployment:
     commands:
       - ./scripts/npm-login.sh
       - ./scripts/ci-build-release.sh
-  latest:
-    branch: master
-    owner: astronomerio
-    commands:
-      - ./scripts/ci-build-latest.sh
