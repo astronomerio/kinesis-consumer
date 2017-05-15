@@ -1,6 +1,6 @@
 {
   "name": "@astronomer/kinesis-consumer",
-  "version": "4.5.1",
+  "version": "4.6.0",
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint lib",
