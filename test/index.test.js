@@ -117,6 +117,16 @@ describe('Record Procesor', function () {
       });
     });
 
+    it('should call processRecord thrice for three records even if they reject', function (done) {
+      const myStub = stub(Consumer.prototype, 'processRecord').rejects('Uh oh');
+      myConsumer.processRecords({
+        records: [{}, {}, {}],
+      }, function () {
+        assert.ok(myStub.calledThrice);
+        done();
+      });
+    });
+
     it('should work with async processRecord', (done) => {
       Consumer.prototype.processRecord = async function (info, cb) {
         await Promise.resolve();
@@ -136,7 +146,7 @@ describe('Record Procesor', function () {
 
     it('should pass the correct value for current record', (done) => {
       const countStub = sinon.stub();
-      Consumer.prototype.processRecord = function (info, cb) {
+      Consumer.prototype.processRecord = async function (info, cb) {
         countStub(info.currentRecord);
         cb();
       };
