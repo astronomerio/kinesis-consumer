@@ -15,6 +15,7 @@
     "thenify": "^3.2.1"
   },
   "devDependencies": {
+    "@astronomerio/astronomer-logger": "^2.0.0",
     "chai": "^3.5.0",
     "dotenv": "2.0.0",
     "eslint": "^3.19.0",

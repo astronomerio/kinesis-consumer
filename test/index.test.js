@@ -2,6 +2,7 @@
 const sinon = require('sinon');
 const { assert, expect } = require('chai');
 const { spy, stub } = require('sinon');
+const createLogger = require('@astronomerio/astronomer-logger');
 const consumer = require('../lib');
 
 describe('Record Procesor', function () {
@@ -26,20 +27,33 @@ describe('Record Procesor', function () {
 
     it('should fail with no processRecord defined', function () {
       assert.throws(function () {
+        new Consumer({
+          logger: createLogger('google-analytics-worker', {}),
+        });
+      });
+    });
+
+    it('should fail with no logger defined', function () {
+      Consumer.prototype.processRecord = function () { };
+      assert.throws(function () {
         new Consumer();
       });
     });
 
-    it('should succeed with processRecord defined', function () {
+    it('should succeed with processRecord and logger defined', function () {
       Consumer.prototype.processRecord = function () { };
       assert.doesNotThrow(function () {
-        new Consumer();
+        new Consumer({
+          logger: createLogger('google-analytics-worker', {}),
+        });
       });
     });
 
     it('should have the right properties', function () {
       Consumer.prototype.processRecord = function () { };
-      const myConsumer = new Consumer();
+      const myConsumer = new Consumer({
+        logger: createLogger('google-analytics-worker', {}),
+      });
       assert.ok(myConsumer.processRecordQueue);
       assert.equal(myConsumer.lastProcessed, null);
       assert.equal(myConsumer.shardId, null);
@@ -53,7 +67,9 @@ describe('Record Procesor', function () {
     beforeEach(function () {
       Consumer = consumer('my-consumer');
       Consumer.prototype.processRecord = function () { };
-      myConsumer = new Consumer();
+      myConsumer = new Consumer({
+        logger: createLogger('google-analytics-worker', {}),
+      });
     });
 
     it('should have the right properties', function () {
@@ -73,8 +89,10 @@ describe('Record Procesor', function () {
 
     beforeEach(function () {
       Consumer = consumer('my-consumer');
-      Consumer.prototype.processRecord = function (info, cb) { cb(); };
-      myConsumer = new Consumer();
+      Consumer.prototype.processRecord = function (info) { return 5; };
+      myConsumer = new Consumer({
+        logger: createLogger('google-analytics-worker', {}),
+      });
     });
 
     it('should call processRecord once for one record', function (done) {
@@ -128,12 +146,13 @@ describe('Record Procesor', function () {
     });
 
     it('should work with async processRecord', (done) => {
-      Consumer.prototype.processRecord = async function (info, cb) {
+      Consumer.prototype.processRecord = async function (info) {
         await Promise.resolve();
-        cb();
       };
 
-      myConsumer = new Consumer();
+      myConsumer = new Consumer({
+        logger: createLogger('google-analytics-worker', {}),
+      });
 
       const mySpy = spy(Consumer.prototype, 'processRecord');
       myConsumer.processRecords({
@@ -146,12 +165,13 @@ describe('Record Procesor', function () {
 
     it('should pass the correct value for current record', (done) => {
       const countStub = sinon.stub();
-      Consumer.prototype.processRecord = async function (info, cb) {
+      Consumer.prototype.processRecord = async function (info) {
         countStub(info.currentRecord);
-        cb();
       };
 
-      myConsumer = new Consumer();
+      myConsumer = new Consumer({
+        logger: createLogger('google-analytics-worker', {}),
+      });
 
       myConsumer.processRecords({
         records: [{}, {}, {}],
@@ -171,7 +191,9 @@ describe('Record Procesor', function () {
     beforeEach(function () {
       Consumer = consumer('my-consumer');
       Consumer.prototype.processRecord = function (info, cb) { cb(); };
-      myConsumer = new Consumer();
+      myConsumer = new Consumer({
+        logger: createLogger('google-analytics-worker', {}),
+      });
     });
 
     it('should succeed if checkpoint succeeds', async () => {
