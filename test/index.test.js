@@ -202,7 +202,7 @@ describe('Record Procesor', function () {
           cb(null, num);
         },
       };
-      await Consumer.checkpoint(checkpointer, 123456);
+      await myConsumer.checkpoint(checkpointer, 123456);
     });
 
     it('should retry if checkpoint fails', async () => {
@@ -220,7 +220,7 @@ describe('Record Procesor', function () {
         cb(null, num);
       });
 
-      await Consumer.checkpoint(checkpointer, 123456);
+      await myConsumer.checkpoint(checkpointer, 123456);
       expect(checkpointStub.calledTwice).to.be.true;
     });
   });
