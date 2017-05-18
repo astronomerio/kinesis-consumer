@@ -54,7 +54,6 @@ describe('Record Procesor', function () {
       const myConsumer = new Consumer({
         logger: createLogger('google-analytics-worker', {}),
       });
-      assert.ok(myConsumer.processRecordQueue);
       assert.equal(myConsumer.lastProcessed, null);
       assert.equal(myConsumer.shardId, null);
     });
