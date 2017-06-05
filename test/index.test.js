@@ -187,7 +187,7 @@ describe('Record Procesor', function () {
     let Consumer;
     let myConsumer;
 
-    beforeEach(function () {
+    beforeEach(() => {
       Consumer = consumer('my-consumer');
       Consumer.prototype.processRecord = function (info, cb) { cb(); };
       myConsumer = new Consumer({
@@ -198,7 +198,7 @@ describe('Record Procesor', function () {
     it('should succeed if checkpoint succeeds', async () => {
       const checkpointer = {
         checkpoint: (num, cb) => {
-          cb(null, num);
+          cb(null);
         },
       };
       await myConsumer.checkpoint(checkpointer, 123456);
@@ -207,7 +207,7 @@ describe('Record Procesor', function () {
     it('should retry if checkpoint fails', async () => {
       const checkpointer = {
         checkpoint: (num, cb) => {
-          cb(null, num);
+          cb(null);
         },
       };
       // first time will error
@@ -216,11 +216,32 @@ describe('Record Procesor', function () {
       });
       // second time will succeed
       checkpointStub.onSecondCall().callsFake((num, cb) => {
-        cb(null, num);
+        cb(null);
       });
 
       await myConsumer.checkpoint(checkpointer, 123456);
       expect(checkpointStub.calledTwice).to.be.true;
+      expect(checkpointStub.calledWith(123456)).to.be.true;
+    });
+
+    it('should retry and call with proper values if no sequence number and checkpoint fails', async () => {
+      const checkpointer = {
+        checkpoint: (cb) => {
+          cb(null);
+        },
+      };
+      // first time will error
+      const checkpointStub = sinon.stub(checkpointer, 'checkpoint').onFirstCall().callsFake((cb) => {
+        cb(new Error('Uh oh'));
+      });
+      // second time will succeed
+      checkpointStub.onSecondCall().callsFake((cb) => {
+        cb(null);
+      });
+
+      await myConsumer.checkpoint(checkpointer);
+      expect(checkpointStub.calledTwice).to.be.true;
+      expect(checkpointStub.calledWith()).to.be.true;
     });
   });
 });
