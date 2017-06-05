@@ -11,8 +11,7 @@
   "dependencies": {
     "async": "^2.3.0",
     "debug": "^2.6.3",
-    "promise-retry": "^1.1.1",
-    "thenify": "^3.2.1"
+    "promise-retry": "^1.1.1"
   },
   "devDependencies": {
     "@astronomerio/astronomer-logger": "^2.0.0",
